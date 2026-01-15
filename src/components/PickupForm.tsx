@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { CalendarIcon, Clock, MapPin, Package, Phone, User, FileText, CheckCircle2, AlertCircle, LogOut } from "lucide-react";
+import { CalendarIcon, Clock, MapPin, Package, Phone, User, FileText, CheckCircle2, AlertCircle, LogOut, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -48,10 +48,17 @@ const timeSlots = [
 ];
 
 interface PickupFormProps {
+  onSubmit?: (orderId: string, verificationOtp: string) => void;
+  onBack?: () => void;
   onLogout?: () => void;
 }
 
-export function PickupForm({ onLogout }: PickupFormProps) {
+// Generate a 4-digit OTP
+const generateOtp = (): string => {
+  return Math.floor(1000 + Math.random() * 9000).toString();
+};
+
+export function PickupForm({ onSubmit, onBack, onLogout }: PickupFormProps) {
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [isLoading, setIsLoading] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
@@ -148,10 +155,19 @@ export function PickupForm({ onLogout }: PickupFormProps) {
 
       if (itemError) throw itemError;
 
-      setSubmitStatus("success");
+      // Generate OTP for verification
+      const otp = generateOtp();
+
+      // If onSubmit callback provided, navigate to tracking
+      if (onSubmit) {
+        onSubmit(order.id, otp);
+      } else {
+        setSubmitStatus("success");
+        toast.success("Pickup request submitted successfully!");
+      }
+      
       setFormData(initialFormData);
       setErrors({});
-      toast.success("Pickup request submitted successfully!");
     } catch (error) {
       console.error("Error submitting order:", error);
       setSubmitStatus("error");
@@ -185,7 +201,17 @@ export function PickupForm({ onLogout }: PickupFormProps) {
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
       >
         <div className="container flex items-center justify-between py-4">
-          <div className="w-10" /> {/* Spacer for centering */}
+          {onBack ? (
+            <button
+              onClick={onBack}
+              className="p-2 text-muted-foreground hover:text-foreground transition-colors"
+              title="Back to Home"
+            >
+              <ArrowLeft size={20} />
+            </button>
+          ) : (
+            <div className="w-10" />
+          )}
           <Logo size="sm" showText />
           {user ? (
             <button
