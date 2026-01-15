@@ -204,6 +204,36 @@ export type Database = {
         }
         Relationships: []
       }
+      scrap_prices: {
+        Row: {
+          category: string | null
+          created_at: string
+          icon: string | null
+          id: string
+          price_per_kg: number
+          scrap_type: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          icon?: string | null
+          id?: string
+          price_per_kg: number
+          scrap_type: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          icon?: string | null
+          id?: string
+          price_per_kg?: number
+          scrap_type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
