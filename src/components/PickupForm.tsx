@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { CalendarIcon, Clock, MapPin, Package, Phone, User, FileText, CheckCircle2, AlertCircle } from "lucide-react";
+import { CalendarIcon, Clock, MapPin, Package, Phone, User, FileText, CheckCircle2, AlertCircle, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,6 +8,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { LoadingSpinner } from "./LoadingSpinner";
 import { Logo } from "./Logo";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
+import { toast } from "sonner";
 
 interface FormData {
   name: string;
@@ -44,11 +47,17 @@ const timeSlots = [
   { value: "evening", label: "Evening (4 PM - 7 PM)" },
 ];
 
-export function PickupForm() {
+interface PickupFormProps {
+  onLogout?: () => void;
+}
+
+export function PickupForm({ onLogout }: PickupFormProps) {
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [isLoading, setIsLoading] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
   const [errors, setErrors] = useState<Partial<FormData>>({});
+
+  const { user, signOut } = useAuth();
 
   const validateForm = (): boolean => {
     const newErrors: Partial<FormData> = {};
@@ -78,28 +87,75 @@ export function PickupForm() {
     setIsLoading(true);
     setSubmitStatus("idle");
 
-    // Simulate API call - Replace with actual Supabase integration
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // Step 1: Create or find customer
+      const { data: existingCustomer } = await supabase
+        .from("customers")
+        .select("id")
+        .eq("phone", formData.phone)
+        .maybeSingle();
+
+      let customerId: string;
+
+      if (existingCustomer) {
+        customerId = existingCustomer.id;
+        // Update customer name if different
+        await supabase
+          .from("customers")
+          .update({ name: formData.name })
+          .eq("id", customerId);
+      } else {
+        const { data: newCustomer, error: customerError } = await supabase
+          .from("customers")
+          .insert({
+            name: formData.name,
+            phone: formData.phone,
+          })
+          .select("id")
+          .single();
+
+        if (customerError) throw customerError;
+        customerId = newCustomer.id;
+      }
+
+      // Step 2: Create order
+      const scheduledFor = new Date(`${formData.pickup_date}T09:00:00`).toISOString();
       
-      // Here you would insert into Supabase
-      // const { error } = await supabase.from('orders').insert({
-      //   name: formData.name,
-      //   phone: formData.phone,
-      //   scrap_type: formData.scrap_type,
-      //   weight: parseFloat(formData.weight),
-      //   pickup_date: formData.pickup_date,
-      //   pickup_time: formData.pickup_time,
-      //   address: formData.address,
-      //   notes: formData.notes,
-      //   status: 'Pending'
-      // });
+      const { data: order, error: orderError } = await supabase
+        .from("orders")
+        .insert({
+          customer_id: customerId,
+          address: formData.address,
+          scheduled_for: scheduledFor,
+          time_slot: formData.pickup_time,
+          status: "pending",
+          estimated_amount: parseFloat(formData.weight) * 10, // Example: ₹10 per kg estimate
+        })
+        .select("id")
+        .single();
+
+      if (orderError) throw orderError;
+
+      // Step 3: Create order item
+      const { error: itemError } = await supabase
+        .from("order_items")
+        .insert({
+          order_id: order.id,
+          scrap_type: formData.scrap_type,
+          quantity: parseFloat(formData.weight),
+          unit: "kg",
+        });
+
+      if (itemError) throw itemError;
 
       setSubmitStatus("success");
       setFormData(initialFormData);
       setErrors({});
+      toast.success("Pickup request submitted successfully!");
     } catch (error) {
+      console.error("Error submitting order:", error);
       setSubmitStatus("error");
+      toast.error("Failed to submit request. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -110,6 +166,11 @@ export function PickupForm() {
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
+  };
+
+  const handleLogout = async () => {
+    await signOut();
+    onLogout?.();
   };
 
   const today = new Date().toISOString().split("T")[0];
@@ -123,8 +184,20 @@ export function PickupForm() {
         animate={{ y: 0 }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
       >
-        <div className="container flex items-center justify-center py-4">
+        <div className="container flex items-center justify-between py-4">
+          <div className="w-10" /> {/* Spacer for centering */}
           <Logo size="sm" showText />
+          {user ? (
+            <button
+              onClick={handleLogout}
+              className="p-2 text-muted-foreground hover:text-foreground transition-colors"
+              title="Sign out"
+            >
+              <LogOut size={20} />
+            </button>
+          ) : (
+            <div className="w-10" />
+          )}
         </div>
       </motion.header>
 

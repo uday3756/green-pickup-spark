@@ -1,4 +1,4 @@
-import { Recycle } from "lucide-react";
+import kabadiLogo from "@/assets/kabadi-logo.png";
 
 interface LogoProps {
   size?: "sm" | "md" | "lg";
@@ -6,9 +6,9 @@ interface LogoProps {
 }
 
 const sizeMap = {
-  sm: { icon: 32, text: "text-xl" },
-  md: { icon: 48, text: "text-2xl" },
-  lg: { icon: 80, text: "text-4xl" },
+  sm: { icon: 40, text: "text-xl" },
+  md: { icon: 64, text: "text-2xl" },
+  lg: { icon: 120, text: "text-4xl" },
 };
 
 export function Logo({ size = "md", showText = true }: LogoProps) {
@@ -17,10 +17,14 @@ export function Logo({ size = "md", showText = true }: LogoProps) {
   return (
     <div className="flex flex-col items-center gap-3">
       <div className="relative">
-        <div className="absolute inset-0 gradient-primary rounded-full blur-xl opacity-30 scale-125" />
-        <div className="relative gradient-primary p-4 rounded-full shadow-button">
-          <Recycle size={icon} className="text-primary-foreground" strokeWidth={2.5} />
-        </div>
+        <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl scale-125" />
+        <img 
+          src={kabadiLogo} 
+          alt="Kabadi Man Logo" 
+          width={icon} 
+          height={icon}
+          className="relative object-contain"
+        />
       </div>
       {showText && (
         <div className="text-center">
