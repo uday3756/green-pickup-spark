@@ -46,7 +46,7 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
-        {/* Logo with glow effect */}
+        {/* Logo with glow effect and white background for visibility */}
         <motion.div
           className="relative mb-6"
           initial={{ y: 20 }}
@@ -54,19 +54,21 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
           transition={{ delay: 0.2, duration: 0.5 }}
         >
           <div className="absolute inset-0 bg-primary/30 blur-2xl scale-150" />
-          <motion.img
-            src={kabadiLogo}
-            alt="Kabadi Man Logo"
-            className="relative w-32 h-32 object-contain"
-            animate={{ 
-              scale: [1, 1.05, 1],
-            }}
-            transition={{ 
-              duration: 2, 
-              repeat: Infinity, 
-              ease: "easeInOut" 
-            }}
-          />
+          <div className="relative bg-white/90 backdrop-blur-sm rounded-full p-4 shadow-card">
+            <motion.img
+              src={kabadiLogo}
+              alt="Kabadi Man Logo"
+              className="w-28 h-28 object-contain"
+              animate={{ 
+                scale: [1, 1.05, 1],
+              }}
+              transition={{ 
+                duration: 2, 
+                repeat: Infinity, 
+                ease: "easeInOut" 
+              }}
+            />
+          </div>
         </motion.div>
 
         {/* App name */}
@@ -79,14 +81,24 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
           Kabadi <span className="text-gradient">Man</span>
         </motion.h1>
 
-        {/* Subtitle */}
+        {/* Tagline */}
         <motion.p
-          className="text-muted-foreground text-lg"
+          className="text-muted-foreground text-lg mb-2"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.5 }}
         >
-          Recycle Smart. Earn Clean.
+          Turning Scrap into Sustainability
+        </motion.p>
+
+        {/* Location */}
+        <motion.p
+          className="text-muted-foreground/70 text-sm flex items-center gap-1"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7, duration: 0.5 }}
+        >
+          📍 Belagavi, Karnataka
         </motion.p>
 
         {/* Superman-style flying logo loader */}
