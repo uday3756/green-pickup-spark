@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { useEffect } from "react";
-import kabadiLogo from "@/assets/kabadi-logo.png";
-import runningMan from "@/assets/running-man.png";
+import kabadiLogo from "@/assets/kabadi-man-logo.png";
 
 interface SplashScreenProps {
   onComplete: () => void;
@@ -90,21 +89,21 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
           Recycle Smart. Earn Clean.
         </motion.p>
 
-        {/* Running man loader */}
+        {/* Superman-style flying logo loader */}
         <motion.div
           className="mt-12 relative overflow-hidden"
-          style={{ width: 160, height: 48 }}
+          style={{ width: 200, height: 80 }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1 }}
         >
-          {/* Green trail behind the runner */}
+          {/* Green trail behind the flying logo */}
           <motion.div
-            className="absolute top-1/2 -translate-y-1/2 h-3 bg-gradient-to-r from-transparent via-primary to-primary/30 rounded-full"
-            initial={{ width: 0, right: "70%" }}
+            className="absolute top-1/2 -translate-y-1/2 h-4 bg-gradient-to-r from-transparent via-primary to-primary/50 rounded-full"
+            initial={{ width: 0, right: "60%" }}
             animate={{ 
-              width: [0, 100, 0],
-              right: ["70%", "20%", "70%"]
+              width: [0, 120, 0],
+              right: ["60%", "15%", "60%"]
             }}
             transition={{
               duration: 1.5,
@@ -113,13 +112,14 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
             }}
           />
           
-          {/* Running man */}
+          {/* Flying logo */}
           <motion.img
-            src={runningMan}
+            src={kabadiLogo}
             alt="Loading"
-            className="absolute top-0 w-12 h-12 object-contain"
+            className="absolute top-1/2 -translate-y-1/2 w-16 h-16 object-contain"
             animate={{
-              x: [0, 100, 0],
+              x: [0, 130, 0],
+              rotate: [0, 10, 0],
             }}
             transition={{
               duration: 1.5,

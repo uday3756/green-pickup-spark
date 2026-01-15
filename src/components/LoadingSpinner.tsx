@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import runningMan from "@/assets/running-man.png";
+import kabadiLogo from "@/assets/kabadi-man-logo.png";
 
 interface LoadingSpinnerProps {
   size?: "sm" | "md" | "lg";
@@ -17,13 +17,13 @@ export function LoadingSpinner({ size = "md", text }: LoadingSpinnerProps) {
 
   return (
     <div className="flex flex-col items-center justify-center gap-3">
-      <div className="relative overflow-hidden" style={{ width: iconSize * 2, height: iconSize }}>
+      <div className="relative overflow-hidden" style={{ width: iconSize * 2.5, height: iconSize }}>
         {/* Green trail */}
         <motion.div
-          className="absolute top-1/2 -translate-y-1/2 h-2 bg-gradient-to-r from-transparent via-primary to-primary/50 rounded-full"
+          className="absolute top-1/2 -translate-y-1/2 h-3 bg-gradient-to-r from-transparent via-primary to-primary/50 rounded-full"
           initial={{ width: 0, right: "50%" }}
           animate={{ 
-            width: [0, iconSize * 1.5, 0],
+            width: [0, iconSize * 1.8, 0],
             right: ["50%", "10%", "50%"]
           }}
           transition={{
@@ -33,15 +33,16 @@ export function LoadingSpinner({ size = "md", text }: LoadingSpinnerProps) {
           }}
         />
         
-        {/* Running man animation */}
+        {/* Flying logo animation - Superman style */}
         <motion.img
-          src={runningMan}
+          src={kabadiLogo}
           alt="Loading"
           width={iconSize}
           height={iconSize}
           className="absolute top-0 object-contain"
           animate={{
-            x: [0, iconSize * 0.8, 0],
+            x: [0, iconSize * 1.2, 0],
+            rotate: [0, 8, 0],
           }}
           transition={{
             duration: 1.2,
