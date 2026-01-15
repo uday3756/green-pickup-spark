@@ -79,13 +79,12 @@ export function OrderTracking({ orderId, verificationOtp, onNewPickup }: OrderTr
     const fetchOrderStatus = async () => {
       const { data: order } = await supabase
         .from("orders")
-        .select("status, partner_id, otp_verified")
+        .select("status, partner_id")
         .eq("id", orderId)
         .single();
 
       if (order) {
         setCurrentStatus(order.status as OrderStatus);
-        setIsOtpVerified(order.otp_verified || false);
         
         if (order.partner_id) {
           const { data: partnerData } = await supabase
