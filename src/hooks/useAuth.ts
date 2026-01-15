@@ -47,6 +47,32 @@ export function useAuth() {
     return { data, error };
   };
 
+  const signInWithGoogle = async () => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: window.location.origin,
+      },
+    });
+    return { data, error };
+  };
+
+  const signInWithPhone = async (phone: string) => {
+    const { data, error } = await supabase.auth.signInWithOtp({
+      phone,
+    });
+    return { data, error };
+  };
+
+  const verifyOtp = async (phone: string, token: string) => {
+    const { data, error } = await supabase.auth.verifyOtp({
+      phone,
+      token,
+      type: "sms",
+    });
+    return { data, error };
+  };
+
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
     return { error };
@@ -58,6 +84,9 @@ export function useAuth() {
     loading,
     signInWithEmail,
     signUpWithEmail,
+    signInWithGoogle,
+    signInWithPhone,
+    verifyOtp,
     signOut,
   };
 }
