@@ -14,7 +14,196 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      current_locations: {
+        Row: {
+          id: string
+          latitude: number | null
+          longitude: number | null
+          partner_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          partner_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          partner_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "current_locations_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: true
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      customers: {
+        Row: {
+          created_at: string | null
+          email: string | null
+          id: string
+          name: string
+          phone: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          name: string
+          phone: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          name?: string
+          phone?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      order_items: {
+        Row: {
+          created_at: string | null
+          id: string
+          order_id: string
+          price_per_unit: number | null
+          quantity: number
+          scrap_type: string
+          unit: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          order_id: string
+          price_per_unit?: number | null
+          quantity: number
+          scrap_type: string
+          unit?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          order_id?: string
+          price_per_unit?: number | null
+          quantity?: number
+          scrap_type?: string
+          unit?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          address: string | null
+          created_at: string | null
+          customer_id: string | null
+          estimated_amount: number | null
+          id: string
+          otp_verified: boolean | null
+          partner_id: string | null
+          scheduled_for: string | null
+          status: string
+          time_slot: string | null
+          total_amount: number | null
+          updated_at: string | null
+          verification_otp: string | null
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string | null
+          customer_id?: string | null
+          estimated_amount?: number | null
+          id?: string
+          otp_verified?: boolean | null
+          partner_id?: string | null
+          scheduled_for?: string | null
+          status?: string
+          time_slot?: string | null
+          total_amount?: number | null
+          updated_at?: string | null
+          verification_otp?: string | null
+        }
+        Update: {
+          address?: string | null
+          created_at?: string | null
+          customer_id?: string | null
+          estimated_amount?: number | null
+          id?: string
+          otp_verified?: boolean | null
+          partner_id?: string | null
+          scheduled_for?: string | null
+          status?: string
+          time_slot?: string | null
+          total_amount?: number | null
+          updated_at?: string | null
+          verification_otp?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partners: {
+        Row: {
+          created_at: string | null
+          email: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          phone: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          phone: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          phone?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
