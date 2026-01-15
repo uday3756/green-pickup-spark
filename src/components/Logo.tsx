@@ -1,4 +1,4 @@
-import kabadiLogo from "@/assets/kabadi-logo.png";
+import kabadiLogo from "@/assets/kabadi-man-logo.png";
 
 interface LogoProps {
   size?: "sm" | "md" | "lg";
