@@ -8,6 +8,7 @@ import kabadiLogo from "@/assets/kabadi-man-logo.png";
 
 interface HomePageProps {
   onBookPickup: () => void;
+  onOpenProfile?: () => void;
 }
 
 const highlights = [
@@ -33,7 +34,7 @@ const highlights = [
   },
 ];
 
-export function HomePage({ onBookPickup }: HomePageProps) {
+export function HomePage({ onBookPickup, onOpenProfile }: HomePageProps) {
   const scrollToAbout = () => {
     document.getElementById("about-section")?.scrollIntoView({ behavior: "smooth" });
   };
@@ -41,7 +42,7 @@ export function HomePage({ onBookPickup }: HomePageProps) {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <Header />
+      <Header onOpenProfile={onOpenProfile} />
 
       {/* Hero Section */}
       <section className="min-h-screen flex flex-col items-center justify-center px-6 pt-20 relative overflow-hidden">
