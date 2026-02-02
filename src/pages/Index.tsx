@@ -5,10 +5,11 @@ import { HomePage } from "@/components/HomePage";
 import { AuthForm } from "@/components/AuthForm";
 import { PickupForm } from "@/components/PickupForm";
 import { OrderTracking } from "@/components/OrderTracking";
+import { ProfilePage } from "@/components/ProfilePage";
 import { useAuth } from "@/hooks/useAuth";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 
-type Screen = "splash" | "home" | "form" | "auth" | "tracking";
+type Screen = "splash" | "home" | "form" | "auth" | "tracking" | "profile";
 
 interface OrderData {
   orderId: string;
@@ -64,6 +65,10 @@ const Index = () => {
     setCurrentScreen("home");
   };
 
+  const handleOpenProfile = () => {
+    setCurrentScreen("profile");
+  };
+
   if (loading && currentScreen !== "splash" && currentScreen !== "home") {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -78,7 +83,7 @@ const Index = () => {
         <SplashScreen key="splash" onComplete={handleSplashComplete} />
       )}
       {currentScreen === "home" && (
-        <HomePage key="home" onBookPickup={handleBookPickup} />
+        <HomePage key="home" onBookPickup={handleBookPickup} onOpenProfile={handleOpenProfile} />
       )}
       {currentScreen === "form" && (
         <PickupForm key="form" onSubmit={handleFormSubmit} onBack={handleBackToHome} />
@@ -93,6 +98,9 @@ const Index = () => {
           verificationOtp={orderData.verificationOtp}
           onNewPickup={handleNewPickup} 
         />
+      )}
+      {currentScreen === "profile" && (
+        <ProfilePage key="profile" onBack={handleBackToHome} />
       )}
     </AnimatePresence>
   );
